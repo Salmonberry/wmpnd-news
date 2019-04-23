@@ -22,7 +22,7 @@ Page({
     nowTemp: '',
     nowWeather: '',
     nowWeatherBackground:'',
-    forcast:[1,2,3,4,5,6,7,8,9]
+    forcast:[]
   },
   onPullDownRefresh() {
     console.log("刷新")
@@ -58,8 +58,23 @@ Page({
           nowWeatherBackground: '/images/' + weather + '-bg.png'
         })
         wx.setNavigationBarColor({
-          frontColor: '#ffffff',
+          frontColor: '#000000',
           backgroundColor: weatherColorMap[weather],
+        })
+
+        //set forcast
+        let nowHour=new Date().getHours()
+        let forecast=[]
+        for(let i=0;i<24;i+=3){
+          forecast.push({
+            time:(i+nowHour)%24+'时',
+            iconPath:'/images/sunny-icon.png/',
+            temp:'12°'
+          })
+        }
+        forecast[0].time='现在'
+        this.setData({
+          forcast:forecast
         })
       },
       complete:()=>{
