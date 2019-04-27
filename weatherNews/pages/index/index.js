@@ -22,7 +22,7 @@ Page({
     nowTemp: '',
     nowWeather: '',
     nowWeatherBackground:'',
-    forcast:[]
+    hourlyWeather:[]
   },
   onPullDownRefresh() {
     console.log("刷新")
@@ -63,18 +63,19 @@ Page({
         })
 
         //set forcast
+        let forecast=result.forecast;
         let nowHour=new Date().getHours()
-        let forecast=[]
+        let hourlyWeather=[]
         for(let i=0;i<24;i+=3){
-          forecast.push({
+          hourlyWeather.push({
             time:(i+nowHour)%24+'时',
-            iconPath:'/images/sunny-icon.png/',
-            temp:'12°'
+            iconPath:'/images/'+forecast[i/3].weather+'-icon.png/',
+            temp:forecast[i/3].temp+'°'
           })
         }
-        forecast[0].time='现在'
+        hourlyWeather[0].time='现在'
         this.setData({
-          forcast:forecast
+          hourlyWeather:hourlyWeather
         })
       },
       complete:()=>{

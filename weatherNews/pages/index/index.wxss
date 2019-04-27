@@ -53,9 +53,9 @@ opacity: 0.65;
 
 .forecast-item {
   display: flex;
-  flex-direction: column;
   flex-shrink: 0;
   width: 120rpx;
+  flex-direction: column;
   align-items: center;
 }
 
