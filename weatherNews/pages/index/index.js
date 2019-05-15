@@ -17,12 +17,14 @@ const weatherColorMap = {
 }
 
 Page({
-  // data种申明变量
+  // data 申明变量
   data: {
     nowTemp: '',
     nowWeather: '',
     nowWeatherBackground:'',
-    hourlyWeather:[]
+    hourlyWeather:[],
+    todayTemp:"",
+    todayDate:""
   },
   onPullDownRefresh() {
     console.log("刷新")
@@ -47,36 +49,9 @@ Page({
         console.log(res)
 
         let result = res.data.result
-        let temp = result.now.temp;
-        let weather = result.now.weather
-        console.log(temp, weather)
-
-        //异步方法，将获取的数据由逻辑层发送到视图层
-        this.setData({
-          nowTemp: temp + '°',
-          nowWeather: weatherMap[weather],
-          nowWeatherBackground: '/images/' + weather + '-bg.png'
-        })
-        wx.setNavigationBarColor({
-          frontColor: '#000000',
-          backgroundColor: weatherColorMap[weather],
-        })
-
-        //set forcast
-        let forecast=result.forecast;
-        let nowHour=new Date().getHours()
-        let hourlyWeather=[]
-        for(let i=0;i<24;i+=3){
-          hourlyWeather.push({
-            time:(i+nowHour)%24+'时',
-            iconPath:'/images/'+forecast[i/3].weather+'-icon.png/',
-            temp:forecast[i/3].temp+'°'
-          })
-        }
-        hourlyWeather[0].time='现在'
-        this.setData({
-          hourlyWeather:hourlyWeather
-        })
+        this.setNow(result);//设置当前的天气
+        this.setHourlyWeather(result);//设置未来几个小时的天气
+        this.setToday(result);
       },
       complete:()=>{
         // console.log('停止刷新')
@@ -84,5 +59,54 @@ Page({
         callback && callback();
       }
     })
-  } 
+  } ,
+
+  //设置当前的天气
+  setNow(result){
+    let temp = result.now.temp;
+    let weather = result.now.weather
+    console.log(temp, weather)
+
+    //异步方法，将获取的数据由逻辑层发送到视图层
+    this.setData({
+      nowTemp: temp + '°',
+      nowWeather: weatherMap[weather],
+      nowWeatherBackground: '/images/' + weather + '-bg.png'
+    })
+    wx.setNavigationBarColor({
+      frontColor: '#000000',
+      backgroundColor: weatherColorMap[weather],
+    })
+  },
+
+  //设置未来几个小时的天气
+  setHourlyWeather(result){
+    let forecast = result.forecast;
+    let nowHour = new Date().getHours()
+    let hourlyWeather = []
+    for (let i = 0; i < 8; i += 1) {
+      hourlyWeather.push({
+        time: (i * 3 + nowHour) % 24 + '时',
+        iconPath: '/images/' + forecast[i].weather + '-icon.png/',
+        temp: forecast[i].temp + '°'
+      })
+    }
+    hourlyWeather[0].time = '现在'
+    this.setData({
+      hourlyWeather: hourlyWeather
+    })
+  },
+ setToday(result){
+   let date=new Date()
+   this.setData({
+     todayTemp: `${result.today.minTemp}° - ${result.today.maxTemp}`,
+     todayDate: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} 今天`
+   })
+ },
+ onTapDayWeather(){
+  //  wx.showToast()//弹出窗口
+  wx.navigateTo({
+    url: '/pages/list/list',
+  })
+ }
 })
