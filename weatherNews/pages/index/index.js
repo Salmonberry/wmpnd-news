@@ -16,6 +16,8 @@ const weatherColorMap = {
   'snow': '#aae1fc'
 }
 
+const QQMapWX=require('../../libs/qqmap-wx-jssdk.js')
+
 Page({
   // data 申明变量
   data: {
@@ -33,7 +35,11 @@ Page({
     });
   },
   onLoad() {
-    this.getNow()
+    // 实例化API核心类
+    this.qqmapsdk = new QQMapWX({
+      key: 'MCJBZ-BFTRW-SZXRX-RZMR7-ZKPM3-4LBGZ'
+    });
+    this.getNow();
   },
   getNow(callback){
     // 从API处数据获取
@@ -109,12 +115,20 @@ Page({
     url: '/pages/list/list',
   })
  },
- onTapLocation(){
-   wx.getLocation({
-     success: res=>{
-       console.log(res.latitude,res.longitude)
-     },
-   })
- }
-
+  onTapLocation() {
+    wx.getLocation({
+      success: res => {
+        this.qqmapsdk.reverseGeocoder({
+          location: {
+            latitude: res.latitude,
+            longitude: res.longitude
+          },
+          success: res => {
+            let city = res.result.address_component.city
+            console.log(city)
+          }
+        })
+      },
+    })
+  }
 })
