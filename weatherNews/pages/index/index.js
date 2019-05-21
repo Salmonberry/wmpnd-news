@@ -16,7 +16,8 @@ const weatherColorMap = {
   'snow': '#aae1fc'
 }
 
-const QQMapWX=require('../../libs/qqmap-wx-jssdk.js')
+const QQMapWX=require('../../libs/qqmap-wx-jssdk.js');
+var qqmapsdk;
 
 Page({
   // data 申明变量
