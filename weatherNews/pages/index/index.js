@@ -37,9 +37,8 @@ Page({
   onLoad() {
     // 实例化API核心类
     this.qqmapsdk=new QQMapWX({
-      key:''
+      key:'MCJBZ-BFTRW-SZXRX-RZMR7-ZKPM3-4LBGZ'
     });
-    
     this.getNow();
   },
   getNow(callback){
@@ -121,10 +120,10 @@ Page({
     wx.getLocation({
       success: res => {
         console.log(res)
-        console.log(qqmapsdk);
+        console.log(this.qqmapsdk);
 
         //调用sdk接口
-        qqmapsdk.reverseGeocoder({
+        this.qqmapsdk.reverseGeocoder({
           location: {
             latitude: res.latitude,
             longitude: res.longitude
