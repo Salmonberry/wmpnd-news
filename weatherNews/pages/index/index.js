@@ -16,10 +16,7 @@ const weatherColorMap = {
   'snow': '#aae1fc'
 }
 //引入SDK核心类
-const QQMapWX=require('../../libs/qqmap-wx-jssdk.js')
-var qqmapsdk = new QQMapWX({
-  key: 'MCJBZ-BFTRW-SZXRX-RZMR7-ZKPM3-4LBGZ'
-});
+const QQMapWX=require('../../libs/qqmap-wx-jssdk.js');
 
 Page({
   // data 申明变量
@@ -39,6 +36,10 @@ Page({
   },
   onLoad() {
     // 实例化API核心类
+    this.qqmapsdk=new QQMapWX({
+      key:''
+    });
+    
     this.getNow();
   },
   getNow(callback){
