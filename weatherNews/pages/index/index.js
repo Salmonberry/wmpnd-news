@@ -26,7 +26,9 @@ Page({
     nowWeatherBackground:'',
     hourlyWeather:[],
     todayTemp:"",
-    todayDate:""
+    todayDate:"",
+    city:'广州',
+    locationTipsText: "点击获取当前位置"
   },
   onPullDownRefresh() {
     console.log("刷新")
@@ -41,6 +43,7 @@ Page({
     });
     this.getNow();
   },
+  //获取当地的天气信息
   getNow(callback){
     // 从API处数据获取
     wx.request({
@@ -48,12 +51,10 @@ Page({
       url: 'https://test-miniprogram.com/api/weather/now',
       //参数
       data: {
-        city: '广州市'
+        city: this.data.city
       },
       //获取成功，返回数据
       success: res => {
-        console.log(res)
-
         let result = res.data.result
         this.setNow(result);//设置当前的天气
         this.setHourlyWeather(result);//设置未来几个小时的天气
@@ -71,7 +72,6 @@ Page({
   setNow(result){
     let temp = result.now.temp;
     let weather = result.now.weather
-    console.log(temp, weather)
 
     //异步方法，将获取的数据由逻辑层发送到视图层
     this.setData({
@@ -119,9 +119,6 @@ Page({
     //小程序api获取当前坐标
     wx.getLocation({
       success: res => {
-        console.log(res)
-        console.log(this.qqmapsdk);
-
         //调用sdk接口
         this.qqmapsdk.reverseGeocoder({
           location: {
@@ -129,10 +126,12 @@ Page({
             longitude: res.longitude
           },
           success: res => {
-            console.log(res)
-
             let city = res.result.address_component.city
-            console.log(city)
+            this.setData({
+              city:city,
+              locationTipsText:""
+            })
+            this.getNow();
           },
           fail:function(res){
             console.log("获取失败")
