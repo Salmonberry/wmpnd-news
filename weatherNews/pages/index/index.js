@@ -15,8 +15,11 @@ const weatherColorMap = {
   'heavyrain': '#c5ccd0',
   'snow': '#aae1fc'
 }
-
+//引入SDK核心类
 const QQMapWX=require('../../libs/qqmap-wx-jssdk.js')
+var qqmapsdk = new QQMapWX({
+  key: 'MCJBZ-BFTRW-SZXRX-RZMR7-ZKPM3-4LBGZ'
+});
 
 Page({
   // data 申明变量
@@ -36,9 +39,6 @@ Page({
   },
   onLoad() {
     // 实例化API核心类
-    this.qqmapsdk = new QQMapWX({
-      key: 'MCJBZ-BFTRW-SZXRX-RZMR7-ZKPM3-4LBGZ'
-    });
     this.getNow();
   },
   getNow(callback){
@@ -116,16 +116,26 @@ Page({
   })
  },
   onTapLocation() {
+    //小程序api获取当前坐标
     wx.getLocation({
       success: res => {
-        this.qqmapsdk.reverseGeocoder({
+        console.log(res)
+        console.log(qqmapsdk);
+
+        //调用sdk接口
+        qqmapsdk.reverseGeocoder({
           location: {
             latitude: res.latitude,
             longitude: res.longitude
           },
           success: res => {
+            console.log(res)
+
             let city = res.result.address_component.city
             console.log(city)
+          },
+          fail:function(res){
+            console.log("获取失败")
           }
         })
       },
