@@ -28,7 +28,7 @@ Page({
     todayTemp:"",
     todayDate:"",
     city:'广州',
-    locationTipsText: "点击获取当前位置"
+    locationTipsText: "点击获取当前位置",
   },
   onPullDownRefresh() {
     console.log("刷新")
@@ -112,7 +112,11 @@ Page({
  onTapDayWeather(){
   //  wx.showToast()//弹出窗口
   wx.navigateTo({
-    url: '/pages/list/list',
+    url: '/pages/list/list?city='+this.data.city,//跳转到list页面 
+                                //参数与路径之间使用 ? 分隔，
+                                //参数键与参数值用 = 相连，
+                                //不同参数用 & 分隔；
+                                //如 'path?key=value&key2=value2'
   })
  },
   onTapLocation() {
